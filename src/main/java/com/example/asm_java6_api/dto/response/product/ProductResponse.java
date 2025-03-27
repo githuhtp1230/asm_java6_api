@@ -1,5 +1,10 @@
 package com.example.asm_java6_api.dto.response.product;
+
+import java.math.BigDecimal;
+import java.util.List;
 import com.example.asm_java6_api.dto.response.category.CategoryResponse;
+import com.example.asm_java6_api.entity.Discount;
+
 import lombok.*;
 
 @Setter
@@ -10,9 +15,10 @@ import lombok.*;
 public class ProductResponse {
     private Integer id;
     private String name;
+    private BigDecimal price;
+    private Integer stock;
     private String description;
-    private Double price;
-    private Integer quantity;
-    private String image;
+    private String brand;
+    private List<ProductImageResponse> images;
     private CategoryResponse category;
 }

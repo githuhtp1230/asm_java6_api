@@ -6,11 +6,17 @@ server:
 
 spring:
   datasource:
-    url: jdbc:sqlserver://localhost:1433;databaseName=asm_java6;encrypt=true;trustServerCertificate=true
-    username: sa
-    password: Qw123456
+    url: jdbc:sqlserver://localhost:1433;databaseName=${DB_NAME};encrypt=true;trustServerCertificate=true
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
     driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
   data:
     redis:
       host: localhost
       port: 6379
+
+# variables
+variables:
+  cart-config:
+    key-prefix-cart: "cart:"
+    key-suffix-order: ":order"

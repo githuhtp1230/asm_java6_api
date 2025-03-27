@@ -1,11 +1,13 @@
 package com.example.asm_java6_api.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Nationalized;
 
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -19,42 +21,54 @@ public class User {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Nationalized
-    @Lob
-    @Column(name = "photo")
-    private String photo;
+    @Size(max = 255)
+    @Column(name = "email")
+    private String email;
 
+    @Size(max = 255)
+    @Column(name = "password")
+    private String password;
+
+    @Size(max = 255)
     @Nationalized
     @Column(name = "name")
     private String name;
+
+    @Size(max = 255)
+    @Column(name = "avatar")
+    private String avatar;
 
     @Column(name = "gender")
     private Boolean gender;
 
     @Column(name = "birthday")
-    private LocalDate birthday;
+    private Instant birthday;
 
-    @Column(name = "email")
-    private String email;
-
+    @Size(max = 13)
     @Column(name = "phone", length = 13)
     private String phone;
 
+    @Size(max = 255)
     @Nationalized
-    @Lob
     @Column(name = "address")
     private String address;
 
-    @OneToMany(mappedBy = "user")
-    private Set<Account> accounts = new LinkedHashSet<>();
+    @Size(max = 50)
+    @ColumnDefault("'User'")
+    @Column(name = "role", length = 50)
+    private String role;
 
-    @OneToMany(mappedBy = "user")
-    private Set<Comment> comments = new LinkedHashSet<>();
+    @ColumnDefault("1")
+    @Column(name = "is_active")
+    private Boolean isActive;
 
     @OneToMany(mappedBy = "user")
     private Set<Like> likes = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "user")
     private Set<Order> orders = new LinkedHashSet<>();
+
+    @OneToMany(mappedBy = "user")
+    private Set<ProductReview> productReviews = new LinkedHashSet<>();
 
 }
