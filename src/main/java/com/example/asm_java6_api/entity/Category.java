@@ -27,7 +27,7 @@ public class Category {
 
     @ColumnDefault("1")
     @Column(name = "is_active")
-    private Boolean isActive;
+    private Boolean isActive = true;
 
     @OneToMany(mappedBy = "category")
     private Set<Product> products = new LinkedHashSet<>();

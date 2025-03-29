@@ -66,7 +66,7 @@ public class CartService {
                 .map(new Function<Object, CartItemResponse>() {
                     @Override
                     public CartItemResponse apply(Object o) {
-                        int productId = Integer.parseInt((String) o);
+                        Long productId = Long.parseLong((String) o);
                         Optional<Product> product = productRepository.findById(productId);
                         if (product.isEmpty()) {
                             removeItem(productId, httpSession);
@@ -83,6 +83,27 @@ public class CartService {
                 .build();
     }
 
+    public CartItemResponse updateQuantity(Long productId, HttpSession httpSession, int delta) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
+
+        String hashKey = KEY_PREFIX_CART + httpSession.getId();
+        hashOperations.increment(hashKey, String.valueOf(product.getId()), delta);
+
+        return CartItemResponse.builder()
+                .product(productMapper.toProductResponse(product))
+                .quantity(Integer.parseInt(hashOperations.get(hashKey, String.valueOf(product.getId()))))
+                .build();
+    }
+
+    public CartItemResponse increaseQuantityItem(Long productId, HttpSession httpSession) {
+        return updateQuantity(productId, httpSession, 1);
+    }
+
+    public CartItemResponse decreaseQuantityItem(Long productId, HttpSession httpSession) {
+        return updateQuantity(productId, httpSession, -1);
+    }
+
     public void saveItem(CartItemRequest cartItemRequest, HttpSession httpSession) {
         productRepository.findById(cartItemRequest.getProductId())
                 .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
@@ -97,7 +118,7 @@ public class CartService {
         setTimeOutCart(httpSession);
     }
 
-    public void removeItem(int productId, HttpSession httpSession) {
+    public void removeItem(Long productId, HttpSession httpSession) {
         String hashKey = KEY_PREFIX_CART + httpSession.getId();
         String listKey = KEY_PREFIX_CART + httpSession.getId() + KEY_SUFFIX_ORDER;
         hashOperations.delete(hashKey, productId + "");

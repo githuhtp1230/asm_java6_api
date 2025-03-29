@@ -14,6 +14,24 @@ spring:
     redis:
       host: localhost
       port: 6379
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: thephuongop12@gmail.com
+    password: skaq tpnt hbuc dtqh
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+
+security:
+  jwt:
+    signer-key: "Qn9MjWd1+UXTs0Zmsa3zWGAvgmkIjPo5qPshFUvpNMUbONas1kn5+KY+jp6s4QfO"
+    access-token-valid-duration: 10 # minutes
+    refresh-token-valid-duration: 30 # minutes
 
 # variables
 variables:

@@ -14,13 +14,16 @@ public enum ErrorCode {
     LOGOUT_FAILED(HttpStatus.BAD_REQUEST, "Logout failed"),
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "Unauthorized"),
     ACCESS_DENIED(HttpStatus.FORBIDDEN, "You have not permission"),
+    GENERATE_TOKEN_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "Generate token failed"),
     // validate
     EMAIL_INVALID(HttpStatus.BAD_REQUEST, "Email is invalid"),
     USERNAME_INVALID(HttpStatus.BAD_REQUEST, "Username is invalid"),
     PASSWORD_INVALID(HttpStatus.BAD_REQUEST, "Password is invalid"),
     TOKEN_INVALID(HttpStatus.BAD_REQUEST, "Token is invalid"),
+    EMAIL_OR_PASSWORD_INVALID(HttpStatus.BAD_REQUEST, "Email or password is invalid"),
     REFRESH_TOKEN_INVALID(HttpStatus.BAD_REQUEST, "Refresh token is invalid"),
     EMAIL_EXISTED(HttpStatus.CONFLICT, "Email already exists"),
+    CATEGORY_EXISTED(HttpStatus.CONFLICT, "Category name already exists"),
     // not found
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "User not found"),
     CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "Category not found"),

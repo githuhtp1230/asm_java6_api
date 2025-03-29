@@ -2,6 +2,8 @@ package com.example.asm_java6_api.dto.response.product;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Set;
+
 import com.example.asm_java6_api.dto.response.category.CategoryResponse;
 import com.example.asm_java6_api.entity.Discount;
 
@@ -19,6 +21,6 @@ public class ProductResponse {
     private Integer stock;
     private String description;
     private String brand;
-    private List<ProductImageResponse> images;
+    private Set<ProductImageResponse> productImages;
     private CategoryResponse category;
 }

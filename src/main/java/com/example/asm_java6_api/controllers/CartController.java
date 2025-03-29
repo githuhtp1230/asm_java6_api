@@ -2,6 +2,7 @@ package com.example.asm_java6_api.controllers;
 
 import com.example.asm_java6_api.dto.ApiResponse;
 import com.example.asm_java6_api.dto.request.cart.CartItemRequest;
+import com.example.asm_java6_api.dto.response.cart.CartItemResponse;
 import com.example.asm_java6_api.dto.response.cart.CartResponse;
 import com.example.asm_java6_api.service.CartService;
 
@@ -37,11 +38,29 @@ public class CartController {
     }
 
     @DeleteMapping("products/{productId}")
-    public ApiResponse<?> removeItem(@PathVariable int productId) {
+    public ApiResponse<?> removeItem(@PathVariable Long productId) {
         cartService.removeItem(productId, httpSession);
         return ApiResponse.builder()
                 .code(200)
                 .message("Delete item from cart successfully")
+                .build();
+    }
+
+    @PatchMapping("products/{productId}/increase-quantity")
+    public ApiResponse<CartItemResponse> increaseQuantityItem(@PathVariable Long productId) {
+        return ApiResponse.<CartItemResponse>builder()
+                .code(200)
+                .message("Increase quantity item successfully")
+                .data(cartService.increaseQuantityItem(productId, httpSession))
+                .build();
+    }
+
+    @PatchMapping("products/{productId}/decrease-quantity")
+    public ApiResponse<CartItemResponse> decreaseQuantityItem(@PathVariable Long productId) {
+        return ApiResponse.<CartItemResponse>builder()
+                .code(200)
+                .message("Increase quantity item successfully")
+                .data(cartService.decreaseQuantityItem(productId, httpSession))
                 .build();
     }
 }

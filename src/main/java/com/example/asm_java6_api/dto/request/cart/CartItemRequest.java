@@ -1,4 +1,5 @@
 package com.example.asm_java6_api.dto.request.cart;
+
 import lombok.*;
 
 @Setter
@@ -7,5 +8,5 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 public class CartItemRequest {
-    private Integer productId;
+    private Long productId;
 }
