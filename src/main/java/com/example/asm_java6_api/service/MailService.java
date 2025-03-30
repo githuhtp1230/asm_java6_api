@@ -5,6 +5,8 @@ import java.util.function.BiConsumer;
 
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
@@ -14,11 +16,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.val;
 
 @Service
+@EnableAsync
 @RequiredArgsConstructor
 public class MailService {
     private final JavaMailSender mailSender;
     private final TemplateEngine templateEngine;
 
+    @Async
     public void sendEmail(String to, String subject, Map<String, String> models, String templateName) {
         MimeMessage message = mailSender.createMimeMessage();
         try {
@@ -30,7 +34,7 @@ public class MailService {
             String htmlContent = templateEngine.process(templateName, context);
             helper.setTo(to);
             helper.setSubject(subject);
-            helper.setText(htmlContent);
+            helper.setText(htmlContent, true);
             mailSender.send(message);
         } catch (Exception e) {
             e.printStackTrace();
