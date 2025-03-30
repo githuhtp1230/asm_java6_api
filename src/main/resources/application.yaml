@@ -34,7 +34,15 @@ security:
     refresh-token-valid-duration: 30 # minutes
 
 # variables
-variables:
+redis:
   cart-config:
+    expiration-time: 30 # minutes
     key-prefix-cart: "cart:"
     key-suffix-order: ":order"
+  register-otp-config:
+    key-pending-user: "register:pending_user:"
+    key-otp: "register:otp:"
+    key-duration-resend-otp: "register:duration_resend_otp:"
+    expiration-time-pending-user: 30 # minutes
+    expiration-time-otp: 3 # minutes
+    expiration-time-resend-otp: 1 #minutes

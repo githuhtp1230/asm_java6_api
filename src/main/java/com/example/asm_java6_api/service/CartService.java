@@ -1,6 +1,5 @@
 package com.example.asm_java6_api.service;
 
-import com.example.asm_java6_api.configuration.AppVariablesConfig;
 import com.example.asm_java6_api.dto.request.cart.CartItemRequest;
 import com.example.asm_java6_api.dto.response.cart.CartItemResponse;
 import com.example.asm_java6_api.dto.response.cart.CartResponse;
@@ -40,23 +39,23 @@ public class CartService {
     private final RedisTemplate<String, Object> redisTemplate;
     private final ProductRepository productRepository;
     private final ProductMapper productMapper;
-    private final AppVariablesConfig appVariablesConfig;
 
-    @NonFinal
     private ListOperations<String, Object> listOperations;
-    @NonFinal
     private HashOperations<String, String, String> hashOperations;
 
+    @Value("${redis.cart-config.key-prefix-cart}")
     private String KEY_PREFIX_CART;
 
+    @Value("${redis.cart-config.key-suffix-order}")
     private String KEY_SUFFIX_ORDER;
+
+    @Value("${redis.cart-config.expiration-time}")
+    private Long EXPIRATION_TIME;
 
     @PostConstruct
     private void init() {
         listOperations = redisTemplate.opsForList();
         hashOperations = redisTemplate.opsForHash();
-        KEY_PREFIX_CART = appVariablesConfig.getCartConfig().getKeyPrefixCart();
-        KEY_SUFFIX_ORDER = appVariablesConfig.getCartConfig().getKeySuffixOrder();
     }
 
     public CartResponse getCart(HttpSession httpSession) {
@@ -130,8 +129,8 @@ public class CartService {
         String hashKey = KEY_PREFIX_CART + httpSession.getId();
         String listKey = KEY_PREFIX_CART + httpSession.getId() + KEY_SUFFIX_ORDER;
         if (redisTemplate.hasKey(listKey)) {
-            redisTemplate.expire(hashKey, 30, TimeUnit.MINUTES);
-            redisTemplate.expire(listKey, 30, TimeUnit.MINUTES);
+            redisTemplate.expire(hashKey, EXPIRATION_TIME, TimeUnit.MINUTES);
+            redisTemplate.expire(listKey, EXPIRATION_TIME, TimeUnit.MINUTES);
         }
     }
 }
