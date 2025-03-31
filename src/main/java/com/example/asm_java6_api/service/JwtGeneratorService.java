@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +29,9 @@ import lombok.experimental.NonFinal;
 @Service
 @RequiredArgsConstructor
 public class JwtGeneratorService {
+    private final RedisTemplate<String, Object> redisTemplate;
+    private final String ISSUER = "thephuong";
+
     @Value("${security.jwt.signer-key}")
     private String SIGNER_KEY;
 
@@ -37,8 +41,8 @@ public class JwtGeneratorService {
     @Value("${security.jwt.refresh-token-valid-duration}")
     private Long REFRESH_TOKEN_VALID_DURATION;
 
-    private final RedisService redisService;
-    private final String ISSUER = "thephuong";
+    @Value("${redis.jwt-config.key-invalid-jwt-id}")
+    private String KEY_INVALID_JWT_ID;
 
     public SignedJWT verifyToken(String token) {
         try {
@@ -51,7 +55,8 @@ public class JwtGeneratorService {
 
             JWTClaimsSet claimsSet = signedJWT.getJWTClaimsSet();
             String jwtId = claimsSet.getJWTID();
-            if (claimsSet.getExpirationTime().before(new Date()) || redisService.get(jwtId) != null) {
+            if (claimsSet.getExpirationTime().before(new Date())
+                    || redisTemplate.opsForValue().get(KEY_INVALID_JWT_ID + jwtId) != null) {
                 throw new AppException(ErrorCode.UNAUTHORIZED);
             }
 
@@ -101,6 +106,15 @@ public class JwtGeneratorService {
             return jwsObject.serialize();
         } catch (Exception e) {
             throw new AppException(ErrorCode.GENERATE_TOKEN_FAILED);
+        }
+    }
+
+    public String extractJwtId(String token) {
+        try {
+            SignedJWT signedJWT = SignedJWT.parse(token);
+            return signedJWT.getJWTClaimsSet().getJWTID();
+        } catch (Exception e) {
+            throw new AppException(ErrorCode.TOKEN_INVALID);
         }
     }
 }
