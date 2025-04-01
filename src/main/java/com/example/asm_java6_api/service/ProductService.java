@@ -27,7 +27,7 @@ public class ProductService {
     private final ProductMapper productMapper;
 
     public List<ProductResponse> getProducts() {
-        List<Product> products = productRepository.findProductsByIsActiveIsTrue();
+        List<Product> products = productRepository.findActiveProducts();
         return products.stream().map(productMapper::toProductResponse).toList();
     }
 

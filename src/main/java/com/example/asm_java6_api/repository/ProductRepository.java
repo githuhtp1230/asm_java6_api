@@ -2,6 +2,7 @@ package com.example.asm_java6_api.repository;
 
 import com.example.asm_java6_api.entity.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -10,5 +11,6 @@ import java.util.List;
 public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findProductsByCategoryId(Integer categoryId);
 
-    List<Product> findProductsByIsActiveIsTrue();
+    @Query("SELECT p FROM Product p INNER JOIN p.category c WHERE c.isActive = true AND p.isActive = true")
+    List<Product> findActiveProducts();
 }

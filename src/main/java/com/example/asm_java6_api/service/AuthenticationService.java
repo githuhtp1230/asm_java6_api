@@ -27,7 +27,6 @@ import com.example.asm_java6_api.exception.AppException;
 import com.example.asm_java6_api.exception.ErrorCode;
 import com.example.asm_java6_api.mapper.UserMapper;
 import com.example.asm_java6_api.repository.UserRepository;
-import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 
 import jakarta.annotation.PostConstruct;
@@ -200,7 +199,6 @@ public class AuthenticationService {
         } catch (Exception e) {
             throw new AppException(ErrorCode.REFRESH_TOKEN_INVALID);
         }
-
     }
 
     public void logout(String bearerToken, HttpServletResponse httpServletResponse) {
