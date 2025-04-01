@@ -28,16 +28,33 @@ public class SecurityConfig {
     private final OncePerRequestFilterImpl oncePerRequestFilterImpl;
     private final UserDetailsServiceImpl userDetailsServiceImpl;
 
+    private final String[] PUBLIC_ENDPOINTS = {
+            "/auth/login",
+            "/auth/register",
+            "/auth/register-verify-otp",
+    };
+
+    private final String[] ADMIN_ENDPOINTS = {
+            "/me/profile"
+    };
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.authorizeHttpRequests(auth -> auth
-                .anyRequest().permitAll());
-
-        httpSecurity.addFilterBefore(oncePerRequestFilterImpl, UsernamePasswordAuthenticationFilter.class);
-        httpSecurity.csrf(AbstractHttpConfigurer::disable);
         httpSecurity.sessionManagement(sessionManager -> sessionManager
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
+        httpSecurity.authorizeHttpRequests(auth -> auth
+                .requestMatchers(HttpMethod.GET, PUBLIC_ENDPOINTS).permitAll()
+                .requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
+                .anyRequest().authenticated());
+
+        httpSecurity.exceptionHandling(exception -> exception
+                .authenticationEntryPoint(new AuthenticationEntryPointImpl())
+                .accessDeniedHandler(new AccessDeniedHandlerImpl()));
+
+        httpSecurity.addFilterBefore(oncePerRequestFilterImpl, UsernamePasswordAuthenticationFilter.class);
+
+        httpSecurity.csrf(AbstractHttpConfigurer::disable);
         return httpSecurity.build();
     }
 

@@ -61,11 +61,11 @@ public class User implements UserDetails {
     @Size(max = 50)
     @ColumnDefault("'User'")
     @Column(name = "role", length = 50)
-    private String role;
+    private String role = "User";
 
     @ColumnDefault("1")
     @Column(name = "is_active")
-    private Boolean isActive;
+    private Boolean isActive = true;
 
     @OneToMany(mappedBy = "user")
     private Set<Like> likes = new LinkedHashSet<>();
@@ -85,5 +85,4 @@ public class User implements UserDetails {
     public String getUsername() {
         return email;
     }
-
 }
